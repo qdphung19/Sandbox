@@ -1,17 +1,25 @@
-from flask import render_template, request, Blueprint, redirect
+from flask import render_template, request, Blueprint, redirect, flash
 from models.clients import ClientModel
 
 submit_view = Blueprint('submit', __name__, template_folder='templates')
 
 
-@submit_view.route('/u-had-submitted', methods=["POST", "GET"])
+@submit_view.route('/submit', methods=["POST", "GET"])
 def submit():
-    fname = request.form['fname']
-    lname = request.form['lname']
+    fname = request.form.get('fname', False)
+    lname = request.form.get('lname', False)
+
+    kw = request.args.get("keyword")
+    print(kw)
+
+    client = ClientModel(fname, lname)
+    client_list = ClientModel.dbmongo_find(kw)
+
 
     if fname and lname:
-        client = ClientModel(fname, lname)
         client.add_client()
-        return render_template("submit-success.html", data=fname)
+        flash("successfully !!!")
+        return render_template("submit.html", data=fname)
     else:
-        return render_template("submit-fail.html")
+        flash("failed !")
+        return render_template("submit.html", client_list = client_list)

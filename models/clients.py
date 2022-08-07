@@ -18,3 +18,12 @@ class ClientModel(BaseModel):
         self.dbpsql.session.add(self)
         self.dbpsql.session.commit()
         self.dbmongo[self.__collection__].insert_one({'firstname': self.fname, 'lastname': self.lname})
+
+    @classmethod
+    def dbmongo_find(self, kw = None):
+        if kw:
+            print(list(self.dbmongo[self.__collection__].find({"firstname":f"{kw}"})))
+            return list(self.dbmongo[self.__collection__].find({"firstname":f"{kw}"}))
+        else:
+            return list(self.dbmongo[self.__collection__].find())
+

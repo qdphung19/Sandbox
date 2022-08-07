@@ -9,11 +9,13 @@ def load_views(app):
     from views.submit import submit_view
     app.register_blueprint(submit_view, url_prefix="/")
 
+    from views.login import login_view
+    app.register_blueprint(login_view, url_prefix="/")
+
 
 def get_app():
     app = Flask(__name__)
     app.config.from_pyfile("config.cfg")
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     with app.app_context():
         load_views(app)
         from models.basemodel import dbpsql

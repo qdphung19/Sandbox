@@ -1,17 +1,35 @@
-<html>
-    <head>
-      <title>Welcome to Myblog</title>
-    </head>
-    <body>
-        <h1>Test</h1>
-        <hr>
-        <form action="/u-had-submitted" method="POST">
-            <label for="fname">First name:</label><br>
-            <input type="text" id="fname" name="fname"><br><br>
-            <label for="lname">Last name:</label><br>
-            <input type="text" id="lname" name="lname"><br><br>
-            <br><br>
-        <button><a>Send</a></button><br>
-        </form>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block content%}
+<h1>Hi!</h1>
+<!--    {% for post in posts %}-->
+<!--    <div><p>{{ post.author.username }}: <b>{{ post.body }}</b></p></div>-->
+<!--    {% endfor %}-->
+{% endblock%}
+
+<!--<html>-->
+<!--    <head>-->
+<!--      <title>Welcome to Myblog</title>-->
+<!--    </head>-->
+<!--    <body>-->
+<!--        <h1>Test</h1>-->
+<!--        <hr>-->
+<!--        {% with messages = get_flashed_messages() %}-->
+<!--            {% if messages %}-->
+<!--                <ul class=flashes>-->
+<!--                    {% for message in messages %}-->
+<!--                    <li>{{ message }}, {{data}} !!!</li>-->
+<!--            {% endfor %}-->
+<!--                </ul>-->
+<!--            {% endif %}-->
+<!--        {% endwith %}-->
+<!--        <hr>-->
+<!--        <form action="/" method="POST">-->
+<!--            <label for="fname">First name:</label><br>-->
+<!--            <input type="text" id="fname" name="fname"><br><br>-->
+<!--            <label for="lname">Last name:</label><br>-->
+<!--            <input type="text" id="lname" name="lname"><br><br>-->
+<!--            <br><br>-->
+<!--        <button><a>Send</a></button><br>-->
+<!--        </form>-->
+<!--    </body>-->
+<!--</html>-->
