@@ -1,0 +1,24 @@
+<html>
+    <head>
+      <title>Test MongoDB PostgreSQL</title>
+    </head>
+    <body>
+        <div>
+            Test:
+            <a href="{{ url_for('index.index') }}">Home</a>
+            <a href="{{ url_for('login.login') }}">Login</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                    <li>{{ message }}, {{data}} !!!</li>
+            {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
