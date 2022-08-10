@@ -22,8 +22,8 @@ class ClientModel(BaseModel):
     @classmethod
     def dbmongo_find(self, kw = None):
         if kw:
-            print(list(self.dbmongo[self.__collection__].find({"firstname":f"{kw}"})))
-            return list(self.dbmongo[self.__collection__].find({"firstname":f"{kw}"}))
+            # print(list(self.dbmongo[self.__collection__].find({"firstname":f"{kw}"})))
+            return list(self.dbmongo[self.__collection__].find({"$or": [{"firstname": f"{kw}"}, {"lastname": f"{kw}"}]}))
         else:
             return list(self.dbmongo[self.__collection__].find())
 

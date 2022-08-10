@@ -9,16 +9,16 @@
     <br><br>
     <button><a>Send</a></button><br>
 </form>
-<hr>
-<div>
-    <form>
-        <input type="text" name="keyword" placerholder="search">
-        <input type="submit" value="search">
-    </form>
-    <ul>
-    {% for client in client_list %}
-        <li> Firstname: {{client["firstname"]}} , Lastname: {{client["lastname"]}}</li>
-    {% endfor %}
-    </ul>
-</div>
+{#<hr>#}
+{#<div>#}
+{#    <form>#}
+{#        <input type="text" name="keyword" placerholder="search">#}
+{#        <input type="submit" value="search">#}
+{#    </form>#}
+{#    <ul>#}
+{#    {% for client in client_list %}#}
+{#        <li> Firstname: {{client["firstname"]}} , Lastname: {{client["lastname"]}}</li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+{#</div>#}
 {% endblock%}

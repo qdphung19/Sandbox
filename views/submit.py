@@ -9,11 +9,11 @@ def submit():
     fname = request.form.get('fname', False)
     lname = request.form.get('lname', False)
 
-    kw = request.args.get("keyword")
-    print(kw)
+    # kw = request.args.get("keyword")
+    # print(kw)
 
     client = ClientModel(fname, lname)
-    client_list = ClientModel.dbmongo_find(kw)
+    # client_list = ClientModel.dbmongo_find(kw)
 
 
     if fname and lname:
@@ -22,4 +22,4 @@ def submit():
         return render_template("submit.html", data=fname)
     else:
         flash("failed !")
-        return render_template("submit.html", client_list = client_list)
+        return render_template("submit.html")
