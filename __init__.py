@@ -1,36 +1,6 @@
 from flask import Flask
 from flask_migrate import Migrate
-
-import gzip
-import subprocess
-
-
-def backup(host, dbname, user, password):
-    # with gzip.open('backup.gz', 'wb') as f:
-    # command = f'pg_dump -h {host} -d {dbname} -U {user} --no-password  -p 5432  -Fc -f D:\\test10.dmp'
-    command = f'pg_dump -h {host} -p 5432 -d {dbname} -U {user} -Fc -f D:\\test10.dmp'
-    # command = f'pg_dump'
-    popen = subprocess.Popen(command, shell=True, env={
-        'PGPASSWORD': password,
-        'PATH': 'C:\Program Files\PostgreSQL\\12\\bin',
-        'PGHOST': '127.0.0.1',
-        'PGPORT': '5432'
-                             })
-
-    # for stdout_line in iter(popen.stdout.readline, ''):
-    #     f.write(stdout_line.encode('utf-8'))
-
-    # popen.stdout.close()
-    popen.wait()
-
-# def backup(host, dbname, user, password):
-#     command = f'pg_dump -h {host} -d {dbname} -U {user} -p 5432  -Fc -f /tmp/table.dmp'
-#     p = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-#                                  universal_newlines=True)
-#     for stdout_line in iter(p.stdout.readline, ''):
-#         f.write(stdout_line.encode('utf-8'))
-#
-#     return p.communicate(f'{password}\n')
+from backup.backup import backup, compress_file, extract_file, filename
 
 
 def load_views(app):
@@ -57,8 +27,11 @@ def get_app():
         # db.create_all()  non !!!
         dbpsql.init_app(app)
         migrate = Migrate(app, dbpsql)
-        backup('127.0.0.1', 'test', 'postgres', 'admin')
-        print('ok')
+        # backup('127.0.0.1', 'test', 'postgres', 'admin')
+        # print(filename)
+        # compress_file('backup-11082022-1500.dmp')
+        # extract_file('backup-11082022-1500.dmp.gz')
+        # print('ok')
     return app
 
 
