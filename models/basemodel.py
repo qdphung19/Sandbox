@@ -71,6 +71,7 @@ class Labos(db.Model):
 
     labo_id = db.Column(db.Integer, primary_key=True)
     labo_nom = db.Column(db.String(32), nullable=False)
+    labo_adresse = db.Column(db.String(128))
     # Labos (1,1) - gérer - Employes (0,1)
     # responsable = db.Column(db.Integer, db.ForeignKey("employes.employe_id"), nullable=True)
     # date_deput = db.Column(db.DateTime, nullable=False)
@@ -78,15 +79,27 @@ class Labos(db.Model):
     # Labos - travailler - Employes: one to many
     employes = db.relationship("Employes", backref='labos', lazy=True)
 
-    def __init__(self, labo_id, labo_nom, responsable):
+    point_collecte = db.relationship("PointCollecte", backref='labos', lazy=True)
+
+    def __init__(self, labo_id, labo_nom, labo_adresse):
         self.labo_id = labo_id
         self.labo_nom = labo_nom
-        self.responsable = responsable
+        self.labo_adresse = labo_adresse
         # self.date_deput = date_deput
 
     def __str__(self):
         return self.labo_nom
 
+
+class PointCollecte(db.Model):
+    __tablename__ = "point_collecte"
+
+    point_collecte_id = db.Column(db.Integer, primary_key=True)
+    point_collecte_adresse = db.Column(db.String(128))
+    labo_id = db.Column(db.Integer, db.ForeignKey("labos.labo_id"))
+
+    def __init__(self, labo_adresse):
+        self.labo_adresse = labo_adresse
 
 class Processus(db.Model):
     __tablename__ = "processus"
@@ -100,5 +113,8 @@ class Processus(db.Model):
 
     def __str__(self):
         return self.processus_nom
+
+
+
 
 
