@@ -13,8 +13,8 @@ class Labos(BaseModel):
     responsable_id = db.Column(db.Integer, db.ForeignKey("employes.employe_id"))
     # Mutually Dependent Rows: post_update=True
     # One to One: uselist=False
-    # responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , backref=db.backref("labo_responsable", uselist=False), post_update=True)
-    responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , uselist=False, post_update=True)
+    responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , backref=db.backref("labo_responsable", uselist=False), post_update=True)
+    # responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , uselist=False, post_update=True)
 
     # Labos - travailler - Employes: one to many
     employes = db.relationship("Employes", backref='labos', lazy=True, foreign_keys="[Employes.labo_id]")

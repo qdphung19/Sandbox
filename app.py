@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_admin import Admin
+
+
+# from flask.ext.babelex import Babel
 # pour environment Windows
 # from backup.backup import backup, compress_file, extract_file, filename
 
@@ -32,9 +35,23 @@ def load_admin_view(admin, db):
     from models.clients import Clients
 
     from flask_admin.contrib.sqla import ModelView
+    class EmployesViewConfig(ModelView):
+        can_view_details = True
+        details_modal = True
+        column_list = ('employe_id', 'nom', 'prenom', 'date_de_naissance', 'sex', 'adresse', 'surveille_par', 'labos')
+        # column_exclude_list = ['salaire']
+        column_filters = ['employe_id', 'nom']
+        column_searchable_list = ['employe_id', 'nom', 'prenom']
+        column_labels = {
+            'employe_id': 'employe_ID'
+        }
 
-    admin.add_view(ModelView(Employes, db.session))
-    admin.add_view(ModelView(Labos, db.session))
+    class LabosViewConfig(ModelView):
+        column_display_pk = True
+        form_excluded_columns = ['employes', 'point_collecte', 'clients']
+
+    admin.add_view(EmployesViewConfig(Employes, db.session))
+    admin.add_view(LabosViewConfig(Labos, db.session))
     admin.add_view(ModelView(Processus, db.session))
     admin.add_view(ModelView(PointCollectes, db.session))
     admin.add_view(ModelView(Enfances, db.session))
@@ -45,7 +62,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile("config.cfg")
     migrate = Migrate()
-    admin=Admin(name="Dashboard", template_mode="bootstrap4")
+    admin = Admin(name="Dashboard", template_mode="bootstrap4")
+    # babel = Babel()
 
     with app.app_context():
         from models.basemodel import db
@@ -55,6 +73,7 @@ def create_app():
         # db.create_all()   # create all table
         migrate.init_app(app, db)
         admin.init_app(app)
+        # babel.init_app(app)
         load_admin_view(admin, db)
         # pour environment Windows
         # backup('127.0.0.1', 'test', 'postgres', 'admin')
@@ -64,8 +83,7 @@ def create_app():
         # print('ok')
     return app
 
+
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)
-
-
