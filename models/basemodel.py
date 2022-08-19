@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+# from sqlalchemy.dialects import postgresql
 import enum
 # from pymongo import MongoClient
 
@@ -15,10 +16,37 @@ class BaseModel(db.Model):
 
 
 class SexEnum(enum.Enum):
-    male = "Male"
-    female = "Female"
-    autre = "Autre"
+    Male = "Male"
+    Female = "Female"
+    Autre = "Autre"
 
+
+class SexEnumEnfances(enum.Enum):
+    Male = "Male"
+    Female = "Female"
+    Autre = "Autre"
+
+
+class Enfances(db.Model):
+    __tablename__ = "enfances"
+
+    enfance_id = db.Column(db.Integer, primary_key=True)
+    nom = db.Column(db.String(64), nullable=False)
+    prenom = db.Column(db.String(64), nullable=False)
+    date_de_naissance = db.Column(db.DateTime)
+    sex = db.Column(db.Enum(SexEnumEnfances))
+
+    def __init__(self, nom, prenom, date_de_naissance, sex):
+        self.nom = nom
+        self.prenom = prenom
+        self.date_de_naissance = date_de_naissance
+        self.sex = sex
+
+
+employes_enfances = db.Table('employes_enfances',
+                              db.Column('employe_id', db.Integer, db.ForeignKey("employes.employe_id"), primary_key=True),
+                              db.Column('enfance_id', db.Integer, db.ForeignKey("enfances.enfance_id"), primary_key=True)
+                              )
 
 class Employes(db.Model):
     __tablename__ = "employes"
@@ -27,14 +55,18 @@ class Employes(db.Model):
     nom = db.Column(db.String(32), nullable=False)
     prenom = db.Column(db.String(32), nullable=False)
     date_de_naissance = db.Column(db.DateTime, nullable=False)
-    sex = db.Column(db.Enum(SexEnum), nullable=False)
+    sex = db.Column(db.Enum(SexEnum))
     adresse = db.Column(db.String(128), nullable=False)
     salaire = db.Column(db.Float)
 
+    # -------- Mutually Dependent Rows----------------------------------------------------------------------------------
     # Employes - travailler - Labos: one to many
     labo_id = db.Column(db.Integer, db.ForeignKey("labos.labo_id"))
 
-    # Employes - gérér - Labos
+    # Employes - gérér - Labos:
+    # rien ici
+
+    # -------- END -----------------------------------------------------------------------------------------------------
 
 
     # Employes - surveiller - Employes
@@ -46,8 +78,11 @@ class Employes(db.Model):
     processus = db.relationship("Processus", secondary="employes_processus", lazy='subquery',
                                 backref=db.backref("employes", lazy=True))
 
+    # Employes - avoir - Enfances: many to many
+    enfances = db.relationship("Enfances", secondary="employes_enfances", lazy='subquery',
+                               backref=db.backref("employes", lazy=True))
 
-    def __init__(self, date_de_naissance, sex, nom, prenom, salaire, adresse, labo_id, surveille_id):
+    def __init__(self, nom, prenom, date_de_naissance, sex,  salaire, adresse, labo_id, surveille_id):
         self.date_de_naissance = date_de_naissance
         self.sex = sex
         self.nom = nom
@@ -72,13 +107,22 @@ class Labos(db.Model):
     labo_id = db.Column(db.Integer, primary_key=True)
     labo_nom = db.Column(db.String(32), nullable=False)
     labo_adresse = db.Column(db.String(128))
-    # Labos (1,1) - gérer - Employes (0,1)
-    # responsable = db.Column(db.Integer, db.ForeignKey("employes.employe_id"), nullable=True)
+
+    # -------- Mutually Dependent Rows----------------------------------------------------------------------------------
+    # Labos (1,1) - gérer - Employes (0,1): One to One
+    responsable_id = db.Column(db.Integer, db.ForeignKey("employes.employe_id"), nullable=False)
+    # Mutually Dependent Rows: post_update=True
+    # One to One: uselist=False
+    # responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , backref=db.backref("labo_responsable", uselist=False), post_update=True)
+    responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , uselist=False, post_update=True)
     # date_deput = db.Column(db.DateTime, nullable=False)
 
     # Labos - travailler - Employes: one to many
-    employes = db.relationship("Employes", backref='labos', lazy=True)
+    employes = db.relationship("Employes", backref='labos', lazy=True, foreign_keys="[Employes.labo_id]")
 
+    # -------- END -----------------------------------------------------------------------------------------------------
+
+    # Labos - avoir - PointCollecte: one to many
     point_collecte = db.relationship("PointCollecte", backref='labos', lazy=True)
 
     def __init__(self, labo_id, labo_nom, labo_adresse):
@@ -96,6 +140,7 @@ class PointCollecte(db.Model):
 
     point_collecte_id = db.Column(db.Integer, primary_key=True)
     point_collecte_adresse = db.Column(db.String(128))
+    # Labos - avoir - PointCollecte: one to many
     labo_id = db.Column(db.Integer, db.ForeignKey("labos.labo_id"))
 
     def __init__(self, labo_adresse):
@@ -113,8 +158,3 @@ class Processus(db.Model):
 
     def __str__(self):
         return self.processus_nom
-
-
-
-
-

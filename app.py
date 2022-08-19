@@ -23,13 +23,14 @@ def load_views(app):
 
 
 def load_admin_view(admin, db):
-    from models.basemodel import Employes, Labos, Processus, PointCollecte
+    from models.basemodel import Employes, Labos, Processus, PointCollecte, Enfances
     from flask_admin.contrib.sqla import ModelView
 
     admin.add_view(ModelView(Employes, db.session))
     admin.add_view(ModelView(Labos, db.session))
     admin.add_view(ModelView(Processus, db.session))
     admin.add_view(ModelView(PointCollecte, db.session))
+    admin.add_view(ModelView(Enfances, db.session))
 
 
 def create_app():
