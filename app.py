@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_admin import Admin
+from flask_admin import Admin, expose, AdminIndexView
+from util import count_employes
 
 
 # from flask.ext.babelex import Babel
@@ -57,12 +58,18 @@ def load_admin_view(admin, db):
     admin.add_view(ModelView(Enfances, db.session))
     admin.add_view(ModelView(Clients, db.session))
 
+class MyAdminIndexView(AdminIndexView):
+    @expose("/")
+    def index(self):
+        return self.render('admin/adminindex.html', msg = count_employes())
 
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile("config.cfg")
     migrate = Migrate()
-    admin = Admin(name="Dashboard", template_mode="bootstrap4")
+    admin = Admin(name="Dashboard",
+                  template_mode="bootstrap4",
+                  index_view=MyAdminIndexView())
     # babel = Babel()
 
     with app.app_context():
