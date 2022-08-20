@@ -16,8 +16,8 @@ class Clients(BaseModel):
     #Labos - s'occuper - Clients: one to many
     labo_id = db.Column(db.Integer, db.ForeignKey("labos.labo_id"))
 
-    # Labos - Clients - Echantillons - Order:
-    # order_id = db.relationship("Orders", backref="clients", lazy=True)
+    # Clients - Echantillons - Order: one to many
+    order_id = db.relationship("Orders", backref="clients", lazy=True)
 
     def __init__(self, client_nom, client_prenom, client_domain, adresse, code_postal, ville, pays):
         self.client_nom = client_nom

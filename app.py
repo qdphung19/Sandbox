@@ -37,6 +37,7 @@ def load_admin_view(admin, db):
     from models.echantillons import Echantillons
     from models.samples import Samples
     from models.orders import Orders
+    from models.resultats import Resultats
 
     from flask_admin.contrib.sqla import ModelView
     class EmployesViewConfig(ModelView):
@@ -60,9 +61,10 @@ def load_admin_view(admin, db):
     admin.add_view(ModelView(PointCollectes, db.session))
     admin.add_view(ModelView(Enfances, db.session))
     admin.add_view(ModelView(Clients, db.session))
+    admin.add_view(ModelView(Orders, db.session))
     admin.add_view(ModelView(Echantillons, db.session))
     admin.add_view(ModelView(Samples, db.session))
-    admin.add_view(ModelView(Orders, db.session))
+    admin.add_view(ModelView(Resultats, db.session))
 
 class MyAdminIndexView(AdminIndexView):
     @expose("/")

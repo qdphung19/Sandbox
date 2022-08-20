@@ -16,3 +16,6 @@ class Echantillons(BaseModel):
 
     def __init__(self, dossier_ref):
         self.dossier_ref = dossier_ref
+
+    def __str__(self):
+        return self.dossier_ref
