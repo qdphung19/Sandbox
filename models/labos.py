@@ -24,8 +24,12 @@ class Labos(BaseModel):
     # Labos - avoir - PointCollectes: one to many
     point_collecte = db.relationship("PointCollectes", backref='labos', lazy=True)
 
+    # Labos - s'occuper - Clients: one to many
     # clients = db.relationship("Clients", backref='labos', lazy=True, foreign_keys="[Labos.labo_id]")
     clients = db.relationship("Clients", backref='labos', lazy=True)
+
+    # Labos - Clients - Echantillons - Order:
+    # order_id = db.relationship("Orders", backref="labos", lazy=True)
 
     def __init__(self, labo_id, labo_nom, labo_adresse):
         self.labo_id = labo_id
