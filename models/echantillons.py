@@ -2,10 +2,11 @@ from models.basemodel import BaseModel, db
 
 
 class Echantillons(BaseModel):
+
     __tablename__ = "echantillons"
 
     echantillon_id = db.Column(db.Integer, primary_key=True)
-    dossier_ref = db.Column(db.String(32))
+    dossier_ref = db.Column(db.String(32), nullable=False)
 
     # Echantillons - avoir - Samples: one to many
     samples = db.relationship("Samples", backref='echantillons', lazy=True)

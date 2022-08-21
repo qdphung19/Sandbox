@@ -9,12 +9,13 @@ class EnumSexEnfances(enum.Enum):
 
 
 class Enfances(BaseModel):
+
     __tablename__ = "enfances"
 
     enfance_id = db.Column(db.Integer, primary_key=True)
-    nom = db.Column(db.String(64))
-    prenom = db.Column(db.String(64))
-    date_de_naissance = db.Column(db.DateTime)
+    nom = db.Column(db.String(64), nullable=False)
+    prenom = db.Column(db.String(64), nullable=False)
+    date_de_naissance = db.Column(db.DateTime, nullable=False)
     sex = db.Column(db.Enum(EnumSexEnfances))
 
     def __init__(self, nom, prenom, date_de_naissance, sex):

@@ -6,6 +6,7 @@ class EnumSexEmployes(enum.Enum):
     Female = "Female"
     Autre = "Autre"
 
+
 employes_enfances = db.Table('employes_enfances',
                               db.Column('employe_id', db.Integer, db.ForeignKey("employes.employe_id"), primary_key=True),
                               db.Column('enfance_id', db.Integer, db.ForeignKey("enfances.enfance_id"), primary_key=True)
@@ -18,19 +19,20 @@ employes_processus = db.Table('employes_processus',
                               )
 
 class Employes(BaseModel):
+
     __tablename__ = "employes"
 
     employe_id = db.Column(db.Integer, primary_key=True)
-    nom = db.Column(db.String(32))
-    prenom = db.Column(db.String(32))
-    date_de_naissance = db.Column(db.DateTime)
-    sex = db.Column(db.Enum(EnumSexEmployes))
-    adresse = db.Column(db.String(128))
+    nom = db.Column(db.String(32), nullable=False)
+    prenom = db.Column(db.String(32), nullable=False)
+    date_de_naissance = db.Column(db.DateTime, nullable=False)
+    sex = db.Column(db.Enum(EnumSexEmployes), nullable=False)
+    adresse = db.Column(db.String(128), nullable=False)
     salaire = db.Column(db.Float)
 
     # -------- Mutually Dependent Rows----------------------------------------------------------------------------------
     # Employes - travailler - Labos: one to many
-    labo_id = db.Column(db.Integer, db.ForeignKey("labos.labo_id"))
+    labo_id = db.Column(db.Integer, db.ForeignKey("labos.labo_id"), nullable=False)
 
     # Employes - gérér - Labos:
     # rien ici
@@ -39,7 +41,7 @@ class Employes(BaseModel):
 
 
     # Employes - surveiller - Employes
-    # self referential relationship
+    # self-referential relationship
     surveille_id = db.Column(db.Integer, db.ForeignKey("employes.employe_id"))
     surveille_par = db.relationship('Employes', remote_side=[employe_id])
 

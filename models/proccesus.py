@@ -2,10 +2,11 @@ from models.basemodel import BaseModel, db
 
 
 class Processus(BaseModel):
+
     __tablename__ = "processus"
 
     processus_id = db.Column(db.Integer, primary_key=True)
-    processus_nom = db.Column(db.String(32))
+    processus_nom = db.Column(db.String(32), nullable=False, unique=True)
     processus_description = db.Column(db.String(256))
 
     def __init__(self, processus_nom, processus_description):

@@ -2,15 +2,16 @@ from models.basemodel import BaseModel, db
 
 
 class Labos(BaseModel):
+
     __tablename__ = "labos"
 
     labo_id = db.Column(db.Integer, primary_key=True)
-    labo_nom = db.Column(db.String(32))
-    labo_adresse = db.Column(db.String(128))
+    labo_nom = db.Column(db.String(32), nullable=False, unique=True)
+    labo_adresse = db.Column(db.String(128), nullable=False)
 
     # -------- Mutually Dependent Rows----------------------------------------------------------------------------------
     # Labos (1,1) - gérer - Employes (0,1): One to One
-    responsable_id = db.Column(db.Integer, db.ForeignKey("employes.employe_id"))
+    responsable_id = db.Column(db.Integer, db.ForeignKey("employes.employe_id"), nullable=False)
     # Mutually Dependent Rows: post_update=True
     # One to One: uselist=False
     responsable = db.relationship("Employes", foreign_keys="[Labos.responsable_id]" , backref=db.backref("labo_responsable", uselist=False), post_update=True)
@@ -31,11 +32,11 @@ class Labos(BaseModel):
     # Labos - Clients - Echantillons - Order:
     # order_id = db.relationship("Orders", backref="labos", lazy=True)
 
-    def __init__(self, labo_id, labo_nom, labo_adresse):
+    def __init__(self, labo_id, labo_nom, labo_adresse, responsable_id):
         self.labo_id = labo_id
         self.labo_nom = labo_nom
         self.labo_adresse = labo_adresse
-        # self.date_deput = date_deput
+        self.responsable_id = responsable_id
 
     def __str__(self):
         return self.labo_nom
